@@ -37,7 +37,7 @@ if (!$query) {
 
         <div class="card shadow-sm">
             <div class="card-header bg-white py-3">
-                <a href="add_new_data_gg.php" class="btn btn-primary">
+                <a href="add_new_data.php" class="btn btn-primary">
                     + Tambah Data Baru
                 </a>
             </div>
@@ -48,12 +48,13 @@ if (!$query) {
                     <table class="table table-striped table-hover table-bordered align-middle">
                         <thead class="table-dark"> <tr>
                                 <th class="text-center">No.</th>
-                                <th>ID Anggota</th>
-                                <th>Nama</th>
-                                <th>Alamat</th>
-                                <th>Telpon</th>
-                                <th>Email</th>
-                                <th class="text-center">Gender</th>
+                                <th class="text-center">ID Anggota</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">Telpon</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Jenis Kelamin</th>
+                                <th class="text-center">Kelas</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center" width="150px">Aksi</th>
                             </tr>
@@ -66,13 +67,19 @@ if (!$query) {
                             ?>
                                 <tr>
                                     <td class="text-center"><?php echo $no++; ?></td>
-                                    <td class="text-center"><?php echo $row['id']; ?></td>
+                                    <td class="text-center"><?php echo $row['id_anggota']; ?></td>
                                     <td class="fw-bold"><?php echo $row['nama']; ?></td>
                                     <td><?php echo $row['alamat']; ?></td>
                                     <td><?php echo $row['telp']; ?></td>
                                     <td><?php echo $row['email']; ?></td>
-                                    <td class="text-center"><?php echo $row['gender']; ?></td>
-                                    
+                                    <td class="text-center"><?php echo $row['jenis_kelamin']; ?></td>
+                                    <td class="text-center">
+                                        <?php if ($row['nama_kelas']): ?>
+                                            <span class="badge bg-primary"><?php echo $row['nama_kelas']; ?></span>
+                                        <?php else: ?>
+                                            <span class="text-muted">-</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td class="text-center">
                                         <?php if($row['status'] == 'Aktif'): ?>
                                             <span class="badge bg-success">Aktif</span>
@@ -82,9 +89,8 @@ if (!$query) {
                                     </td>
 
                                     <td class="text-center">
-                                        <a href="edit_data_gg.php?id=<?php echo $row['id'];?>" class="btn btn-warning btn-sm">Edit</a>
-                                        
-                                        <a href="delete_data_gg.php?id=<?php echo $row['id'];?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data?')">Hapus</a>
+                                        <a href="edit_data.php?id=<?php echo $row['id_anggota'];?>" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="delete_data.php?id=<?php echo $row['id'];?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data?')">Hapus</a>
                                     </td>
                                 </tr>
                             <?php

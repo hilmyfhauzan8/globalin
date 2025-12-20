@@ -1,9 +1,13 @@
 <?php
 
-include_once 'config_gg.php';
+require_once 'config.php';
 
-$sql = 'SELECT * FROM peserta ORDER BY id ASC';
-// $sql = 'SELECT * FROM peserta ORDER BY nama ASC';
+$sql = 'SELECT a.*, k.nama_kelas FROM anggota as a
+        LEFT JOIN kelas as k ON a.id_anggota = k.id_kelas
+        GROUP BY a.id_anggota
+        ORDER BY a.id_anggota ASC';
+// $sql = 'SELECT * FROM anggota ORDER BY id_anggota ASC';
+// $sql = 'SELECT * FROM anggota ORDER BY nama ASC';
 $query = mysqli_query($conn, $sql);
 
 if (!$query) {

@@ -1,19 +1,12 @@
 <?php
 require_once 'config.php';
 
-if ( isset($_GET['id_anggota']) ) {
+$id = $_GET['id'];
+$sql = "DELETE FROM anggota WHERE id_anggota='$id'";
 
-    $id = $_GET['id_anggota'];
-    $sql = "DELETE FROM anggota WHERE id=$id";
-    $query = mysqli_query($conn, $sql);
-
-    if ( $query ) {
-        header('Location: pesertaa.php?status=sukses-hapus');
-    } else {
-        die("Gagal menghapus data...");
-    }
-
+if (mysqli_query($conn, $sql)) {
+    header('Location: index.php?status=sukses-hapus');
 } else {
-    die("Akses dilarang...");
+    echo"Gagal hapus" . mysqli_error( $conn );
 }
 ?>

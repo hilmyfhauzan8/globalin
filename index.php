@@ -90,7 +90,7 @@ if (!$query) {
 
                                     <td class="text-center">
                                         <a href="edit_data.php?id=<?php echo $row['id_anggota'];?>" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="delete_data.php?id=<?php echo $row['id_anggota'];?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data?')">Hapus</a>
+                                        <a href="delete_data.php?id=<?php echo $row['id_anggota'];?>" class="btn btn-danger btn-sm">Hapus</a>
                                     </td>
                                 </tr>
                             <?php

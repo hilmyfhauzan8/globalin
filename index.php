@@ -3,7 +3,7 @@
 require_once 'config.php';
 
 $sql = 'SELECT a.*, k.nama_kelas FROM anggota as a
-        LEFT JOIN kelas as k ON a.id_anggota = k.id_kelas
+        LEFT JOIN kelas as k ON a.id_kelas = k.id_kelas
         GROUP BY a.id_anggota
         ORDER BY a.id_anggota ASC';
 // $sql = 'SELECT * FROM anggota ORDER BY id_anggota ASC';
@@ -90,7 +90,7 @@ if (!$query) {
 
                                     <td class="text-center">
                                         <a href="edit_data.php?id=<?php echo $row['id_anggota'];?>" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="delete_data.php?id=<?php echo $row['id'];?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data?')">Hapus</a>
+                                        <a href="delete_data.php?id=<?php echo $row['id_anggota'];?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data?')">Hapus</a>
                                     </td>
                                 </tr>
                             <?php

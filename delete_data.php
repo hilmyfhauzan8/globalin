@@ -1,9 +1,9 @@
 <?php
 include_once 'config.php';
 
-if ( isset($_GET['id']) ) {
+if ( isset($_GET['id_anggota']) ) {
 
-    $id = $_GET['id'];
+    $id = $_GET['id_anggota'];
     $sql = "DELETE FROM peserta WHERE id=$id";
     $query = mysqli_query($conn, $sql);
 

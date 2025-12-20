@@ -70,7 +70,7 @@ if (!$query) {
                                     <td class="text-center"><?php echo $row['id_anggota']; ?></td>
                                     <td class="fw-bold"><?php echo $row['nama']; ?></td>
                                     <td><?php echo $row['alamat']; ?></td>
-                                    <td><?php echo $row['telp']; ?></td>
+                                    <td><?php echo $row['telpon']; ?></td>
                                     <td><?php echo $row['email']; ?></td>
                                     <td class="text-center"><?php echo $row['jenis_kelamin']; ?></td>
                                     <td class="text-center">

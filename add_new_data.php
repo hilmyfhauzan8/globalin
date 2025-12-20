@@ -24,7 +24,7 @@ if (isset($_POST['simpan'])) {
     $telpon = mysqli_real_escape_string($conn, $telpon_fix);
 
     $sql = "INSERT INTO anggota (nama, alamat, telpon, email, jenis_kelamin, id_kelas, status) 
-            VALUES ('$nama', '$alamat', '$telpon_raw', '$email', '$jenis_kelamin', '$id_kelas', '$status')";
+            VALUES ('$nama', '$alamat', '$telpon', '$email', '$jenis_kelamin', '$id_kelas', '$status')";
     
     $query = mysqli_query($conn, $sql);
 
@@ -67,8 +67,8 @@ if (isset($_POST['simpan'])) {
                     </div>
 
                     <div class="mb-3">
-                        <label for="telp" class="form-label fw-bold">Nomor Telepon</label>
-                        <input type="text" class="form-control" name="telp" placeholder="Contoh: 0812xxxx">
+                        <label for="telpon" class="form-label fw-bold">Nomor Telepon</label>
+                        <input type="text" class="form-control" name="telpon" placeholder="Contoh: 0812xxxx">
                         <div class="form-text text-muted">Gunakan angka saja.</div>
                     </div>
 

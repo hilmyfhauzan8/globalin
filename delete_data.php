@@ -1,10 +1,10 @@
 <?php
-include_once 'config.php';
+require_once 'config.php';
 
 if ( isset($_GET['id_anggota']) ) {
 
     $id = $_GET['id_anggota'];
-    $sql = "DELETE FROM peserta WHERE id=$id";
+    $sql = "DELETE FROM anggota WHERE id=$id";
     $query = mysqli_query($conn, $sql);
 
     if ( $query ) {

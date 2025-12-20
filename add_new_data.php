@@ -1,32 +1,35 @@
 <?php
-include_once 'config_gg.php';
+require_once 'config.php';
+
+$query_kelas = mysqli_query($conn, "SELECT * FROM kelas ORDER BY id_kelas ASC");
 
 if (isset($_POST['simpan'])) {
     $nama   = mysqli_real_escape_string($conn, $_POST['nama']);
     $alamat = mysqli_real_escape_string($conn, $_POST['alamat']);
     $email  = mysqli_real_escape_string($conn, $_POST['email']);
-    $gender = $_POST['gender'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
     $status = $_POST['status'];
+    $id_kelas = $_POST['id_kelas'];
 
-    $telp_raw = $_POST['telp'];
-    $telp_clean = str_replace([' ', '-', '.'], '', $telp_raw); // Hapus spasi/strip
+    $telpon_raw = $_POST['telpon'];
+    $telpon_clean = str_replace([' ', '-', '.'], '', $telpon_raw); // Hapus spasi/strip
 
-    if (substr($telp_clean, 0, 3) == '+62') {
-        $telp_fix = '0' . substr($telp_clean, 3);
-    } elseif (substr($telp_clean, 0, 2) == '62') {
-        $telp_fix = '0' . substr($telp_clean, 2);
+    if (substr($telpon_clean, 0, 3) == '+62') {
+        $telpon_fix = '0' . substr($telpon_clean, 3);
+    } elseif (substr($telpon_clean, 0, 2) == '62') {
+        $telpon_fix = '0' . substr($telpon_clean, 2);
     } else {
-        $telp_fix = $telp_clean;
+        $telpon_fix = $telpon_clean;
     }
-    $telp = mysqli_real_escape_string($conn, $telp_fix);
+    $telpon = mysqli_real_escape_string($conn, $telpon_fix);
 
-    $sql = "INSERT INTO peserta (nama, alamat, telp, email, gender, status) 
-            VALUES ('$nama', '$alamat', '$telp', '$email', '$gender', '$status')";
+    $sql = "INSERT INTO anggota (nama, alamat, telpon, email, jenis_kelamin, id_kelas, status) 
+            VALUES ('$nama', '$alamat', '$telpon_raw', '$email', '$jenis_kelamin', '$id_kelas', '$status')";
     
     $query = mysqli_query($conn, $sql);
 
     if ($query) {
-        header('Location: peserta_gg.php?status=sukses');
+        header('Location: index.php?status=sukses');
     } else {
         echo "Gagal menyimpan: " . mysqli_error($conn);
     }
@@ -74,16 +77,29 @@ if (isset($_POST['simpan'])) {
                         <input type="email" class="form-control" name="email" placeholder="nama@email.com">
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">Pilih Kelas</label>
+                        <select name="id_kelas" class="form-select" required>
+                            <option value="" disabled selected>-- Pilih Kelas --</option>
+                                <?php
+                                if (isset($query_kelas)) mysqli_data_seek($query_kelas, 0);
+                                while ($kelas = mysqli_fetch_assoc($query_kelas)):
+                                ?>
+                                <option value="<?php echo $kelas['id_kelas']; ?>"><?php echo $kelas['nama_kelas']; ?></option>
+                                <?php endwhile; ?>
+                        </select>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold d-block">Jenis Kelamin</label>
                             
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="pria" value="Pria" checked>
+                                <input class="form-check-input" type="radio" name="jenis_kelamin" id="pria" value="Pria" checked>
                                 <label class="form-check-label" for="pria">Pria</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="wanita" value="Wanita">
+                                <input class="form-check-input" type="radio" name="jenis_kelamin" id="wanita" value="Wanita">
                                 <label class="form-check-label" for="wanita">Wanita</label>
                             </div>
                         </div>
@@ -103,7 +119,7 @@ if (isset($_POST['simpan'])) {
                     </div>
 
                     <hr class="my-4"> <div class="d-flex justify-content-end gap-2">
-                        <a href="peserta_gg.php" class="btn btn-secondary">Batal</a>
+                        <a href="index.php" class="btn btn-secondary">Batal</a>
                         <button type="submit" name="simpan" class="btn btn-primary px-4">Simpan Data</button>
                     </div>
 

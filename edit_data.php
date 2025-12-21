@@ -6,7 +6,7 @@ if ( !isset($_GET['id']) ) {
     exit;
 }
 
-$id = $_GET['id'];
+$id = (int)$_GET['id'];
 
 $sql = "SELECT * FROM anggota WHERE id_anggota=$id";
 $query = mysqli_query($conn, $sql);

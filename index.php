@@ -40,11 +40,11 @@ if (!$query) {
         }
 
         .toast.showing {
-            animation: slideInRight 0.5s ease forwards;
+            animation: slideInRight 1.5s ease forwards;
         }
 
         .toast.hiding {
-            animation: slideOutRight 0.5s ease forwards;
+            animation: slideOutRight 1.5s ease forwards;
         }
     </style>
 </head>
@@ -94,15 +94,15 @@ if (!$query) {
                         ?>
                             <tr>
                                 <td class="text-center"><?php echo $no++; ?></td>
-                                <td class="text-center"><?php echo $row['id_anggota']; ?></td>
-                                <td class="fw-bold"><?php echo $row['nama']; ?></td>
-                                <td><?php echo $row['alamat']; ?></td>
-                                <td><?php echo $row['telpon']; ?></td>
-                                <td><?php echo $row['email']; ?></td>
-                                <td class="text-center"><?php echo $row['jenis_kelamin']; ?></td>
+                                <td class="text-center"><?php echo htmlspecialchars($row['id_anggota']); ?></td>
+                                <td class="fw-bold"><?php echo htmlspecialchars($row['nama']); ?></td>
+                                <td><?php echo htmlspecialchars($row['alamat']); ?></td>
+                                <td><?php echo htmlspecialchars($row['telpon']); ?></td>
+                                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                <td class="text-center"><?php echo htmlspecialchars($row['jenis_kelamin']); ?></td>
                                 <td class="text-center">
                                     <?php if ($row['nama_kelas']): ?>
-                                        <span class="badge bg-primary"><?php echo $row['nama_kelas']; ?></span>
+                                        <span class="badge bg-primary"><?php echo htmlspecialchars($row['nama_kelas']); ?></span>
                                     <?php else: ?>
                                         <span class="text-muted">-</span>
                                     <?php endif; ?>
@@ -132,7 +132,7 @@ if (!$query) {
                         } else {
                         ?>
                             <tr>
-                                <td colspan="8" class="text-center p-5">
+                                <td colspan="10" class="text-center p-5">
                                     Data Masih Kosong
                                 </td>
                             </tr>

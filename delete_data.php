@@ -1,7 +1,7 @@
 <?php
 require_once 'config.php';
 
-$id = $_GET['id'];
+$id = (int)$_GET['id'];
 $sql = "DELETE FROM anggota WHERE id_anggota='$id'";
 
 if (mysqli_query($conn, $sql)) {

@@ -1,24 +1,20 @@
 <?php
 require_once 'config.php';
 
-// 1. Ambil daftar kelas untuk dropdown
 $query_kelas = mysqli_query($conn, "SELECT * FROM kelas ORDER BY id_kelas ASC");
 
-// 2. Ambil data jika kelas sudah dipilih
 $id_kelas_selected = isset($_GET['id_kelas']) ? $_GET['id_kelas'] : null;
 $anggota = [];
 $jadwal = [];
 
 if ($id_kelas_selected) {
-    // Ambil anggota di kelas tersebut
-    $sql_anggota = "SELECT * FROM anggota WHERE id_kelas = $id_kelas_selected ORDER BY nama ASC";
+    $sql_anggota = "SELECT * FROM anggota WHERE id_kelas = $id_kelas_selected AND status = 'Aktif' ORDER BY nama ASC";
     $query_anggota = mysqli_query($conn, $sql_anggota);
     while ($row = mysqli_fetch_assoc($query_anggota)) {
         $anggota[] = $row;
     }
 
-    // Ambil jadwal tanggal pertemuan (1-7) untuk kelas ini
-    $sql_jadwal = "SELECT * FROM jadwal_pertemuan WHERE id_kelas = $id_kelas_selected";
+    $sql_jadwal = "SELECT pertemuan_ke, tanggal FROM jadwal_pertemuan WHERE id_kelas = $id_kelas_selected";
     $query_jadwal = mysqli_query($conn, $sql_jadwal);
     while ($row = mysqli_fetch_assoc($query_jadwal)) {
         $jadwal[$row['pertemuan_ke']] = $row['tanggal'];
@@ -150,7 +146,6 @@ if ($id_kelas_selected) {
     function setTanggal(pertemuan) {
         let tgl = prompt("Masukkan tanggal untuk pertemuan ke-" + pertemuan + " (YYYY-MM-DD):", "<?php echo date('Y-m-d'); ?>");
         if (tgl) {
-            // Nanti di sini kita buat script PHP untuk simpan tanggal ke tabel jadwal_pertemuan
             window.location.href = "simpan_jadwal.php?id_kelas=<?php echo $id_kelas_selected; ?>&p=" + pertemuan + "&tgl=" + tgl;
         }
     }

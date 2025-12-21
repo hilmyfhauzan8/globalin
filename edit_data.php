@@ -1,15 +1,16 @@
 <?php
-include_once 'config_gg.php';
+require_once 'config.php';
 
 if ( !isset($_GET['id']) ) {
-    header('Location: peserta_gg.php');
+    header('Location: index.php');
     exit;
 }
 
 $id = $_GET['id'];
 
-$sql = "SELECT * FROM peserta WHERE id=$id";
+$sql = "SELECT * FROM anggota WHERE id_anggota=$id";
 $query = mysqli_query($conn, $sql);
+$query_kelas = mysqli_query($conn,"SELECT * FROM kelas ORDER BY id_kelas ASC");
 $data = mysqli_fetch_assoc($query);
 
 if ( mysqli_num_rows($query) < 1 ) {
@@ -18,27 +19,40 @@ if ( mysqli_num_rows($query) < 1 ) {
 
 if (isset($_POST['simpan'])) {
     
-    $id     = $_POST['id'];
+    $id     = $_POST['id_anggota'];
     $nama   = mysqli_real_escape_string($conn, $_POST['nama']);
     $alamat = mysqli_real_escape_string($conn, $_POST['alamat']);
-    $telp   = mysqli_real_escape_string($conn, $_POST['telp']);
     $email  = mysqli_real_escape_string($conn, $_POST['email']);
-    $gender = $_POST['gender'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $id_kelas = $_POST['id_kelas'];
     $status  = mysqli_real_escape_string($conn, $_POST['status']);
 
-    $sql = "UPDATE peserta SET 
-            nama='$nama', 
-            alamat='$alamat', 
-            telp='$telp', 
-            email='$email', 
-            gender='$gender', 
+    $telpon_raw = $_POST['telpon'];
+    $telpon_clean = str_replace([' ', '-', '.'], '', $telpon_raw);
+
+    if (substr($telpon_clean, 0, 3) == '+62') {
+        $telpon_fix = '0' . substr($telpon_clean, 3);
+    } elseif (substr($telpon_clean, 0, 2) == '62') {
+        $telpon_fix = '0' . substr($telpon_clean, 2);
+    } else {
+        $telpon_fix = $telpon_clean;
+    }
+    $telpon = mysqli_real_escape_string($conn, $telpon_fix);
+
+    $sql = "UPDATE anggota SET
+            nama='$nama',
+            alamat='$alamat',
+            telpon='$telpon',
+            email='$email',
+            jenis_kelamin='$jenis_kelamin',
+            id_kelas='$id_kelas',
             status='$status'
-            WHERE id=$id";
+            WHERE id_anggota=$id";
 
     $query = mysqli_query($conn, $sql);
 
     if ($query) {
-        header('Location: pesertaa.php?status=sukses-edit');
+        header('Location: index.php?status=sukses-edit');
     } else {
         echo "Gagal menyimpan perubahan: " . mysqli_error($conn);
     }
@@ -48,121 +62,86 @@ if (isset($_POST['simpan'])) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Edit Data Peserta</title>
-    <link rel="stylesheet" href="style.css">
-    
-    <style>
-        body {
-            font-family: sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-            margin: 0;
-        }
-
-        .form-container {
-            background-color: #ffffff;
-            max-width: 500px;
-            margin: 30px auto;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .form-header {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-            font-size: 14px;
-        }
-
-        input[type="text"], input[type="email"], textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
-            border-color: #f0e130;
-            outline: none;
-        }
-
-        .radio-group {
-            margin-bottom: 20px;
-        }
-        
-        .radio-group label {
-            display: inline-block;
-            margin-right: 20px;
-            font-weight: normal;
-            cursor: pointer;
-        }
-
-        .form-actions {
-            text-align: right;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 
-<body>
-    <div class="form-container">
-        <h3 class="form-header">Edit Data Peserta</h3>
-
-        <form action="" method="POST">
-            
-            <input type="hidden" name="id" value="<?php echo $data['id'] ?>" />
-
-            <label for="nama">Nama Lengkap</label>
-            <input type="text" name="nama" value="<?php echo $data['nama'] ?>" required />
-
-            <label for="alamat">Alamat Domisili</label>
-            <textarea name="alamat" style="font-family:sans-serif" rows="3" required><?php echo $data['alamat'] ?></textarea>
-
-            <label for="telp">Nomor Telepon</label>
-            <input type="text" name="telp" value="<?php echo $data['telp'] ?>" />
-
-            <label for="email">Alamat Email</label>
-            <input type="email" name="email" value="<?php echo $data['email'] ?>" />
-
-            <label>Jenis Kelamin</label>
-            <div class="radio-group">
-                <?php $jk = $data['gender']; ?>
-                <label>
-                    <input type="radio" name="gender" value="Pria" <?php echo ($jk == 'Pria') ? "checked" : "" ?>> Pria
-                </label>
-                <label>
-                    <input type="radio" name="gender" value="Wanita" <?php echo ($jk == 'Wanita') ? "checked" : "" ?>> Wanita
-                </label>
+<body class="bg-light">
+    <div class="container mt-5 mb-5">
+        <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+            <div class="card-header bg-white text-center py-3">
+                <h4 class="mb-0 fw-bold text-primary">Edit Data Peserta</h4>
             </div>
+            <div class="card-body p-4">
+                <form action="" method="POST">
+                    <input type="hidden" name="id_anggota" value="<?php echo $data['id_anggota'] ?>" />
 
-            <label>Status</label>
-            <div class="radio-group">
-                <?php $jk = $data['status']; ?>
-                <label>
-                    <input type="radio" name="status" value="Aktif" <?php echo ($jk == 'Aktif') ? "checked" : "" ?>> Aktif
-                </label>
-                <label>
-                    <input type="radio" name="status" value="Tidak aktif" <?php echo ($jk == 'Tidak aktif') ? "checked" : "" ?>> Tidak aktif
-                </label>
-            </div>
-            
-            <div class="form-actions">
-                <a href="pesertaa.php" class="button button-danger" style="margin-right: 10px;">Batal</a>
-                <input type="submit" value="Simpan Perubahan" name="simpan" class="button button-warning" />
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Lengkap</label>
+                        <input type="text" class="form-control" name="nama" value="<?php echo $data['nama'] ?>" required>
+                    </div>
 
-        </form>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Alamat Domisili</label>
+                        <textarea class="form-control" name="alamat" rows="3" required><?php echo $data['alamat'] ?></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nomor Telepon</label>
+                        <input type="text" class="form-control" name="telpon" value="<?php echo $data['telpon'] ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Alamat Email</label>
+                        <input type="email" class="form-control" name="email" value="<?php echo $data['email'] ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Pilih Kelas</label>
+                        <select name="id_kelas" class="form-select" required>
+                            <?php while ($kelas = mysqli_fetch_assoc($query_kelas)): ?>
+                                <option value="<?php echo $kelas['id_kelas']; ?>" <?php echo ($data['id_kelas'] == $kelas['id_kelas']) ? "selected" : "" ?>>
+                                    <?php echo $kelas['nama_kelas']; ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold d-block">Jenis Kelamin</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kelamin" value="Pria" <?php echo ($data['jenis_kelamin'] == 'Pria') ? "checked" : "" ?>>
+                                <label class="form-check-label">Pria</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kelamin" value="Wanita" <?php echo ($data['jenis_kelamin'] == 'Wanita') ? "checked" : "" ?>>
+                                <label class="form-check-label">Wanita</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold d-block">Status</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" value="Aktif" <?php echo ($data['status'] == 'Aktif') ? "checked" : "" ?>>
+                                <label class="form-check-label text-success fw-bold">Aktif</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" value="Tidak aktif" <?php echo ($data['status'] == 'Tidak aktif') ? "checked" : "" ?>>
+                                <label class="form-check-label text-muted">Tidak Aktif</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="index.php" class="btn btn-secondary">Batal</a>
+                        <button type="submit" name="simpan" class="btn btn-primary px-4">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
+
 </html>

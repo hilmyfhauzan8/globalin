@@ -109,5 +109,37 @@ if (!$query) {
                 </div> </div> </div> <br><br>
     </div> <script src="js/bootstrap.bundle.min.js"></script>
 
+<div class="modal fade" id="modalHapus" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-white" style="background-color: #f2878e;">
+                <h5 class="modal-title">Konfirmasi Hapus Data</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <i class="text-danger" style="font-size: 3rem;">⚠️</i>
+                <p class="mt-3">Apakah Anda yakin ingin menghapus data anggota bernama <br> <strong id="namaAnggota"></strong>?</p>
+                <small class="text-muted">Tindakan ini tidak dapat dibatalkan.</small>
+            </div>
+            <div class="modal-footer bg-light border-0 d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Batal</button>
+                <a id="btnHapusConfirm" href="#" class="btn text-white px-4" style="background-color: #f2878e;">Ya, Hapus</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var modalHapus = document.getElementById('modalHapus');
+    modalHapus.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
+        var nama = button.getAttribute('data-nama');
+
+        document.getElementById('namaAnggota').textContent = nama;
+        document.getElementById('btnHapusConfirm').href = 'delete_data.php?id=' + id;
+    });
+</script>
+
 </body>
 </html>

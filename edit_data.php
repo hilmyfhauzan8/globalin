@@ -108,29 +108,27 @@ if (isset($_POST['simpan'])) {
                         </select>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold d-block">Jenis Kelamin</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kelamin" value="Pria" <?php echo ($data['jenis_kelamin'] == 'Pria') ? "checked" : "" ?>>
-                                <label class="form-check-label">Pria</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kelamin" value="Wanita" <?php echo ($data['jenis_kelamin'] == 'Wanita') ? "checked" : "" ?>>
-                                <label class="form-check-label">Wanita</label>
-                            </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold d-block">Jenis Kelamin</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenis_kelamin" id="pria" value="Pria" <?php echo ($data['jenis_kelamin'] == 'Pria') ? "checked" : "" ?>>
+                            <label class="form-check-label" for="pria">Pria</label>
                         </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="jenis_kelamin" id="wanita" value="Wanita" <?php echo ($data['jenis_kelamin'] == 'Wanita') ? "checked" : "" ?>>
+                            <label class="form-check-label" for="wanita">Wanita</label>
+                        </div>
+                    </div>
 
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold d-block">Status</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status" value="Aktif" <?php echo ($data['status'] == 'Aktif') ? "checked" : "" ?>>
-                                <label class="form-check-label text-success fw-bold">Aktif</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="status" value="Tidak aktif" <?php echo ($data['status'] == 'Tidak aktif') ? "checked" : "" ?>>
-                                <label class="form-check-label text-muted">Tidak Aktif</label>
-                            </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold d-block">Status</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="aktif" value="Aktif" <?php echo ($data['status'] == 'Aktif') ? "checked" : "" ?>>
+                            <label class="form-check-label" for="aktif">Aktif</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="nonaktif" value="Tidak aktif" <?php echo ($data['status'] == 'Tidak aktif') ? "checked" : "" ?>>
+                            <label class="form-check-label" for="nonaktif">Tidak Aktif</label>
                         </div>
                     </div>
 

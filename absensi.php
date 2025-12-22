@@ -3,9 +3,11 @@ require_once 'config.php';
 
 $query_kelas = mysqli_query($conn, "SELECT * FROM kelas ORDER BY id_kelas ASC");
 
-$id_kelas_selected = isset($_GET['id_kelas']) ? $_GET['id_kelas'] : null;
+$id_kelas_selected = isset($_GET['id_kelas']) ? (int)$_GET['id_kelas'] : null;
+
 $anggota = [];
 $jadwal = [];
+$data_simbol = [];
 
 if ($id_kelas_selected) {
     $sql_anggota = "SELECT * FROM anggota WHERE id_kelas = $id_kelas_selected AND status = 'Aktif' ORDER BY nama ASC";
@@ -19,6 +21,15 @@ if ($id_kelas_selected) {
     while ($row = mysqli_fetch_assoc($query_jadwal)) {
         $jadwal[$row['pertemuan_ke']] = $row['tanggal'];
     }
+
+    $sql_absensi = "SELECT ab.id_anggota, ab.pertemuan_ke, ab.keterangan 
+                    FROM absensi as ab 
+                    JOIN anggota as a ON ab.id_anggota = a.id_anggota 
+                    WHERE a.id_kelas = $id_kelas_selected";
+    $query_absensi = mysqli_query($conn, $sql_absensi);
+    while ($row = mysqli_fetch_assoc($query_absensi)) {
+        $data_simbol[$row['id_anggota']][$row['pertemuan_ke']] = $row['keterangan'];
+    }
 }
 ?>
 
@@ -29,10 +40,10 @@ if ($id_kelas_selected) {
     <title>Sistem Absensi - Globalin Academy</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <style>
-        .bg-custom { background-color: #2596be; color: white; }
         .table-absensi th, .table-absensi td { vertical-align: middle; text-align: center; font-size: 0.9rem; }
-        .symbol-select { border: none; background: transparent; cursor: pointer; font-size: 1.2rem; }
         .date-header { font-size: 0.7rem; display: block; color: #666; }
+        .header-p { cursor: pointer; color: inherit; text-decoration: none; }
+        .header-p:hover { color: #2596be; }
     </style>
 </head>
 <body class="bg-light">
@@ -52,7 +63,7 @@ if ($id_kelas_selected) {
                         <option value="" disabled <?php echo !$id_kelas_selected ? 'selected' : ''; ?>>-- Pilih Kelas --</option>
                         <?php while ($k = mysqli_fetch_assoc($query_kelas)): ?>
                             <option value="<?php echo $k['id_kelas']; ?>" <?php echo ($id_kelas_selected == $k['id_kelas']) ? 'selected' : ''; ?>>
-                                <?php echo $k['nama_kelas']; ?>
+                                <?php echo htmlspecialchars($k['nama_kelas']); ?>
                             </option>
                         <?php endwhile; ?>
                     </select>
@@ -88,7 +99,7 @@ if ($id_kelas_selected) {
                             <tr>
                                 <?php for($i=1; $i<=7; $i++): ?>
                                     <th>
-                                        <a href="#" class="text-decoration-none text-dark" onclick="setTanggal(<?php echo $i; ?>)">
+                                        <a href="#" class="header-p" onclick="setTanggal(<?php echo $i; ?>)">
                                             <?php echo $i; ?>
                                         </a>
                                         <span class="date-header"><?php echo isset($jadwal[$i]) ? date('d/m', strtotime($jadwal[$i])) : '--/--'; ?></span>
@@ -104,36 +115,38 @@ if ($id_kelas_selected) {
                                     <td class="text-start fw-bold"><?php echo htmlspecialchars($a['nama']); ?></td>
                                     
                                     <?php 
-                                    $total_hadir = 0;
+                                    $total_per_siswa = 0; 
+
                                     for($i=1; $i<=7; $i++): 
-                                        // Nanti di sini kita panggil data absen dari database
-                                        $status = ''; // Dummy status
+                                        $status = isset($data_simbol[$a['id_anggota']][$i]) ? $data_simbol[$a['id_anggota']][$i] : '';
+                                        
+                                        $simbol = '-';
+                                        if ($status == 'Hadir') { $simbol = '✅'; $total_per_siswa++; }
+                                        elseif ($status == 'Tidak hadir') $simbol = '❌';
+                                        elseif ($status == 'Sakit') $simbol = '🟡';
+                                        elseif ($status == 'Izin') $simbol = '🟦';
                                     ?>
                                         <td>
-                                            <select class="symbol-select">
-                                                <option value="">-</option>
-                                                <option value="Hadir">✅</option>
-                                                <option value="Tidak hadir">❌</option>
-                                                <option value="Sakit">🟡</option>
-                                                <option value="Izin">🟦</option>
-                                            </select>
+                                            <a href="update_absensi.php?id=<?php echo $a['id_anggota']; ?>&p=<?php echo $i; ?>&id_kelas=<?php echo $id_kelas_selected; ?>" class="text-decoration-none">
+                                                <span style="font-size: 1.2rem;"><?php echo $simbol; ?></span>
+                                            </a>
                                         </td>
                                     <?php endfor; ?>
                                     
-                                    <td class="fw-bold text-primary">0</td>
+                                    <td class="fw-bold text-primary"><?php echo $total_per_siswa; ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="mt-4 p-3 bg-light rounded border">
+                <div class="mt-4 p-3 bg-light rounded border small">
                     <h6 class="fw-bold mb-2">Keterangan :</h6>
                     <div class="d-flex gap-4">
-                        <span>✅ : Hadir</span>
-                        <span>❌ : Tidak hadir</span>
-                        <span>🟡 : Sakit (Warna Kuning)</span>
-                        <span>🟦 : Izin (Warna Biru)</span>
+                        <span>✅ Hadir</span>
+                        <span>❌ Tidak hadir</span>
+                        <span>🟡 Sakit</span>
+                        <span>🟦 Izin</span>
                     </div>
                 </div>
             <?php endif; ?>

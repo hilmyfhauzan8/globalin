@@ -21,7 +21,7 @@ if (isset($_GET['id_kelas']) && isset($_GET['p']) && isset($_GET['tgl'])) {
     $query = mysqli_query($conn, $sql);
 
     if ($query) {
-        header("Location: absensi_baru.php?id_kelas=$id_kelas&status=sukses-jadwal");
+        header("Location: absensi.php?id_kelas=$id_kelas&status=sukses-jadwal");
     } else {
         echo "Gagal menyimpan jadwal: " . mysqli_error($conn);
     }

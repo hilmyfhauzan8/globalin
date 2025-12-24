@@ -157,7 +157,7 @@ if (!$query) {
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center p-4">
-                    <i class="text-danger" style="font-size: 3rem;">⚠️</i>
+                    <b class="text-danger" style="font-size: 3rem;">⚠️</b>
                     <p class="mt-3">Apakah Anda yakin ingin menghapus data anggota bernama <br> <strong id="namaAnggota"></strong>?</p>
                     <small class="text-muted">Tindakan ini tidak dapat dibatalkan.</small>
                 </div>

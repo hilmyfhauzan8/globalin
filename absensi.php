@@ -9,22 +9,29 @@ if (isset($_POST['simpan_semua'])) {
     
     foreach ($_POST['absen'] as $id_anggota => $pertemuans) {
         foreach ($pertemuans as $p_ke => $keterangan) {
+            
+            $cek_absen = mysqli_query($conn, "SELECT id_absensi FROM absensi WHERE id_anggota = $id_anggota AND pertemuan_ke = $p_ke");
+            $data_ada = (mysqli_num_rows($cek_absen) > 0);
+            
             if (!empty($keterangan)) {
                 
                 $cek_tgl = mysqli_query($conn, "SELECT tanggal FROM jadwal_pertemuan WHERE id_kelas = $id_kelas AND pertemuan_ke = $p_ke");
                 $tgl_data = mysqli_fetch_assoc($cek_tgl);
                 $tanggal = ($tgl_data) ? $tgl_data['tanggal'] : date('Y-m-d');
 
-                $cek_absen = mysqli_query($conn, "SELECT id_absensi FROM absensi WHERE id_anggota = $id_anggota AND pertemuan_ke = $p_ke");
-                
-                if (mysqli_num_rows($cek_absen) > 0) {
-                    $sql_save = "UPDATE absensi SET keterangan = '$keterangan', tanggal = '$tanggal' 
-                                 WHERE id_anggota = $id_anggota AND pertemuan_ke = $p_ke";
+                if ($data_ada) {
+                    $sql_save = "UPDATE absensi SET keterangan = '$keterangan', tanggal = '$tanggal'
+                    WHERE id_anggota = $id_anggota AND pertemuan_ke = $p_ke";
                 } else {
-                    $sql_save = "INSERT INTO absensi (id_anggota, pertemuan_ke, tanggal, keterangan) 
-                                 VALUES ($id_anggota, $p_ke, '$tanggal', '$keterangan')";
+                    $sql_save = "INSERT INTO absensi (id_anggota, pertemuan_ke, tanggal, keterangan)
+                    VALUES ($id_anggota, $p_ke, '$tanggal', '$keterangan'";
                 }
                 mysqli_query($conn, $sql_save);
+            } else {
+                if ($data_ada) {
+                    $sql_delete = "DELETE FROM absensi WHERE id_anggota = $id_anggota AND pertemuan_ke = $p_ke";
+                    mysqli_query($conn, $sql_delete);
+                }
             }
         }
     }
@@ -146,6 +153,7 @@ if ($id_kelas_selected) {
                     <div class="small text-muted">
                         Keterangan: ✅ Hadir | ❌ Alfa | 🟡 Sakit | 🟦 Izin
                     </div>
+                    
                     <button type="submit" name="simpan_semua" class="btn btn-primary px-5 fw-bold shadow-sm">
                         Simpan Semua Perubahan
                     </button>

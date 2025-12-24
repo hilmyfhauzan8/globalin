@@ -24,7 +24,7 @@ if (isset($_POST['simpan_semua'])) {
                     WHERE id_anggota = $id_anggota AND pertemuan_ke = $p_ke";
                 } else {
                     $sql_save = "INSERT INTO absensi (id_anggota, pertemuan_ke, tanggal, keterangan)
-                    VALUES ($id_anggota, $p_ke, '$tanggal', '$keterangan'";
+                    VALUES ($id_anggota, $p_ke, '$tanggal', '$keterangan')";
                 }
                 mysqli_query($conn, $sql_save);
             } else {
@@ -71,7 +71,7 @@ if ($id_kelas_selected) {
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-primary fw-bold">
-            <a href="absensi.php">
+            <a href="absensi.php" class="text-decoration-none">
                 ABSENSI GLOBALIN ACADEMY
             </a>
         </h2>

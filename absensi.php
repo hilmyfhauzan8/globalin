@@ -63,7 +63,11 @@ if ($id_kelas_selected) {
 <body class="bg-light">
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-primary fw-bold">ABSENSI GLOBALIN ACADEMY</h2>
+        <h2 class="text-primary fw-bold">
+            <a href="absensi.php">
+                ABSENSI GLOBALIN ACADEMY
+            </a>
+        </h2>
         <a href="index.php" class="btn btn-secondary btn-sm">Kembali</a>
     </div>
 

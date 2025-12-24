@@ -27,7 +27,6 @@ if (isset($_GET['id_kelas']) && isset($_GET['p']) && isset($_GET['tgl'])) {
     }
 
 } else {
-    // Jika diakses tanpa parameter, tendang ke index
     header('Location: index.php');
 }
 ?>

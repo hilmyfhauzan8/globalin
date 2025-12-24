@@ -68,6 +68,12 @@ if (!$query) {
                 + Tambah Data Baru
             </a>
         </div>
+
+        <div class="card-header bg-white py-3">
+            <a href="absensi_baru.php" class="btn btn-success">
+                Absensi
+            </a>
+        </div>
         
         <div class="card-body">
             <div class="table-responsive">
